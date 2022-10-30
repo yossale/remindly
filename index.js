@@ -61,7 +61,21 @@ async function main() {
   };
 
   startRsvpButton.addEventListener('click', () => {
-    ui.start('#firebaseui-auth-container', uiConfig);
+    if (auth.currentUser) {
+      // User is signed in; allows user to sign out
+      signOut(auth);
+    } else {
+      // No user is signed in; allows user to sign in
+      ui.start('#firebaseui-auth-container', uiConfig);
+    }
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      startRsvpButton.textContent = 'LOGOUT';
+    } else {
+      startRsvpButton.textContent = 'RSVP';
+    }
   });
 
   const ui = new firebaseui.auth.AuthUI(auth);
